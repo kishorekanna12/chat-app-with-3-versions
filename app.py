@@ -1,14 +1,14 @@
 from flask import Flask, request, redirect, render_template_string
 
 app = Flask(__name__)
-messages = ["Welcome to Chat App v2!"]
+messages = ["Welcome to Chat App v3!"]
 
-HTML_V2 = """
+HTML_V3 = """
 <!DOCTYPE html>
 <html>
-<head><title>Chat App - v2 (24MIS0381)</title></head>
+<head><title>Chat App - v3 (24MIS0381)</title></head>
 <body style="font-family: Arial; margin: 40px;">
-    <h2>Chat App - Version 2 (Send & View Messages)</h2>
+    <h2>Chat App - Version 3 (Send, View & Delete Messages)</h2>
     <p><b>Reg No:</b> 24MIS0381</p>
     <form method="POST" action="/send">
         <input type="text" name="message" placeholder="Type a message..." required>
@@ -18,7 +18,12 @@ HTML_V2 = """
     <h3>Messages:</h3>
     <ul>
         {% for msg in messages %}
-            <li>{{ msg }}</li>
+            <li style="margin-bottom: 8px;">
+                {{ msg }}
+                <form method="POST" action="/delete/{{ loop.index0 }}" style="display:inline; margin-left: 10px;">
+                    <button type="submit" style="color: red;">Delete</button>
+                </form>
+            </li>
         {% else %}
             <li>No messages yet.</li>
         {% endfor %}
@@ -29,13 +34,19 @@ HTML_V2 = """
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template_string(HTML_V2, messages=messages)
+    return render_template_string(HTML_V3, messages=messages)
 
 @app.route('/send', methods=['POST'])
 def send():
     msg = request.form.get('message')
     if msg:
         messages.append(msg)
+    return redirect('/')
+
+@app.route('/delete/<int:index>', methods=['POST'])
+def delete(index):
+    if 0 <= index < len(messages):
+        messages.pop(index)
     return redirect('/')
 
 if __name__ == '__main__':
