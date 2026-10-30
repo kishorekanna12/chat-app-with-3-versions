@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: chat-app
-        image: YOUR_DOCKERHUB_USER/chat-app-24mis0381:v2
+        image: kishorekanna1/chat-app-24mis0381:v2
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
